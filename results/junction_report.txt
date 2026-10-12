@@ -1,0 +1,20 @@
+COPY NEUTRAL DETECTION: WHAT THE EVIDENCE COSTS
+
+fragment length            167 bp
+anchor each side           20 bp
+usable spanning fragments  0.76
+reads required             3
+
+expected junction reads = coverage * tumour_fraction / 2 * 0.76
+
+ fraction |    at 0.1x |   coverage |   WGS Gbp |  capture Gbp
+--------------------------------------------------------------
+     0.01 |     0.0004 |      1400x |      4024 |         2.10
+     0.02 |     0.0008 |       700x |      2012 |         1.05
+     0.05 |     0.0019 |       280x |       805 |         0.42
+     0.10 |     0.0038 |       140x |       402 |         0.21
+     0.25 |     0.0095 |        56x |       161 |         0.08
+     0.50 |     0.0190 |        28x |        80 |         0.04
+
+panel target               1.5 Mb (0.052% of the genome)
+enrichment                 1917x
