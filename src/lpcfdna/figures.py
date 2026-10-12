@@ -92,6 +92,7 @@ def fig_depth_plateau(sweep: pd.DataFrame, out_dir: Path,
     offsets = {lesions[0]: 0, lesions[1]: 2, lesions[2]: -2}
     fig, ax = plt.subplots(figsize=(7.6, 4.7), facecolor=SURFACE)
     _style(ax)
+    plotted: list[float] = []
 
     for colour, lesion in zip(SERIES, lesions, strict=True):
         group = sweep[sweep["lesion"] == lesion]
@@ -101,6 +102,7 @@ def fig_depth_plateau(sweep: pd.DataFrame, out_dir: Path,
         ys = [p[1] for p in points if not np.isnan(p[1])]
         if not xs:
             continue
+        plotted.extend(ys)
         ax.plot(xs, ys, "-o", color=colour, linewidth=2.0, markersize=8,
                 markeredgecolor=SURFACE, markeredgewidth=2, zorder=3)
         ax.annotate(LESION_LABELS.get(lesion, lesion), xy=(xs[-1], ys[-1]),
@@ -116,11 +118,15 @@ def fig_depth_plateau(sweep: pd.DataFrame, out_dir: Path,
     ax.set_xscale("log")
     ax.set_yscale("log")
     ax.set_xlim(0.008, 20)
-    ax.set_ylim(0.04, 0.55)
+    # Limits from the data rather than hard coded, so a point can never fall
+    # off the chart without anyone noticing.
+    low, high = min(plotted), max(plotted)
+    ax.set_ylim(low * 0.8, high * 1.25)
     _log_ticks(ax, "x", [0.01, 0.05, 0.1, 0.5, 1.0, 5.0],
                ["0.01x", "0.05x", "0.1x", "0.5x", "1x", "5x"])
-    _log_ticks(ax, "y", [0.05, 0.075, 0.1, 0.15, 0.25, 0.4, 0.5],
-               ["5%", "7.5%", "10%", "15%", "25%", "40%", "50%"])
+    ticks = [t for t in (0.03, 0.05, 0.075, 0.1, 0.15, 0.25, 0.4, 0.5)
+             if low * 0.8 <= t <= high * 1.25]
+    _log_ticks(ax, "y", ticks, [f"{t * 100:g}%" for t in ticks])
     ax.set_xlabel("sequencing depth", color=INK_SOFT, fontsize=10)
     ax.set_ylabel("smallest detectable tumour fraction", color=INK_SOFT,
                   fontsize=10)

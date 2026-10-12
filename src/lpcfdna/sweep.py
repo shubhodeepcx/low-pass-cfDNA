@@ -21,15 +21,15 @@ from pathlib import Path
 
 import numpy as np
 
-from .detect import BinCountDetector, is_localised
+from .detect import BinCountDetector, is_localised, localisation_precision
 from .genome import COPY_NEUTRAL, BinnedGenome, lesion_copy_number, lesion_size_mb
 from .simulate import LibraryModel, simulate_library, simulate_panel
 
 __all__ = ["SweepConfig", "run_sweep", "write_csv"]
 
 DEFAULT_LESIONS = ("plus8", "minus7", "del(5q)", "del(7q)", "del(13q)",
-                   "del(20q)", "del(20q)_small", "complex", "t(9;22)",
-                   "t(15;17)")
+                   "del(20q)", "del(20q)_small", "complex",
+                   "t(9;22)", "t(15;17)", "t(8;21)", "inv(16)")
 
 
 @dataclass
@@ -43,8 +43,8 @@ class SweepConfig:
                                            0.10, 0.15, 0.25, 0.40)
     lesions: tuple[str, ...] = DEFAULT_LESIONS
     n_panel: int = 100
-    n_calibration: int = 1000
-    n_fpr_check: int = 500
+    n_calibration: int = 2000
+    n_fpr_check: int = 1000
     n_replicates: int = 200
     target_fpr: float = 0.05
     seed: int = 20261012
@@ -108,6 +108,7 @@ def run_sweep(config: SweepConfig | None = None, verbose: bool = True
             cn = copy_numbers[lesion]
             for fraction in config.tumour_fractions:
                 detected = localised = 0
+                precisions = []
                 for _ in range(config.n_replicates):
                     counts = simulate_library(
                         genome, rng, depth=depth, tumour_fraction=fraction,
@@ -115,6 +116,9 @@ def run_sweep(config: SweepConfig | None = None, verbose: bool = True
                     result = detector.call(counts, threshold=thr)
                     detected += result.detected
                     localised += is_localised(result.called_bins, cn)
+                    if result.detected:
+                        precisions.append(
+                            localisation_precision(result.called_bins, cn))
                 rows.append(dict(
                     lesion=lesion,
                     copy_neutral=lesion in COPY_NEUTRAL,
@@ -124,6 +128,8 @@ def run_sweep(config: SweepConfig | None = None, verbose: bool = True
                     n_replicates=config.n_replicates,
                     detected=round(detected / config.n_replicates, 4),
                     localised=round(localised / config.n_replicates, 4),
+                    precision=(round(float(np.mean(precisions)), 4)
+                               if precisions else ""),
                 ))
             if verbose:
                 print(f"  {lesion:<16} done  "

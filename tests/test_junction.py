@@ -11,6 +11,7 @@ from __future__ import annotations
 import numpy as np
 import pytest
 
+from lpcfdna.genome import GENOME_HAPLOID_BP, SEQUENCED_GENOME_BP
 from lpcfdna.junction import (
     CapturePanel,
     JunctionModel,
@@ -116,3 +117,16 @@ def test_report_mentions_the_things_a_reader_needs():
         assert token in text
     # The project writes no long dashes; chr() keeps this file clean too.
     assert chr(0x2014) not in text
+
+
+def test_sequencing_cost_is_charged_against_the_whole_genome():
+    """The bin grid is autosomal; a sequencing run is not.
+
+    Quoting untargeted cost against the autosomes alone would understate a
+    real run by the length of the sex chromosomes, so ``gigabases`` defaults
+    to the sequenced genome rather than the binned one.
+    """
+    assert SEQUENCED_GENOME_BP > GENOME_HAPLOID_BP
+    assert gigabases(1.0) == pytest.approx(SEQUENCED_GENOME_BP / 1e9)
+    assert CapturePanel().enrichment == pytest.approx(
+        SEQUENCED_GENOME_BP / CapturePanel().target_bp)

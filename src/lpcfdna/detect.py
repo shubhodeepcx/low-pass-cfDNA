@@ -24,7 +24,8 @@ import numpy as np
 from .genome import BinnedGenome
 
 __all__ = ["gc_correct", "candidate_segments", "CallResult",
-           "BinCountDetector", "localisation_overlap", "is_localised"]
+           "BinCountDetector", "localisation_overlap",
+           "localisation_precision", "is_localised"]
 
 DEFAULT_WINDOWS: tuple[int, ...] = (8, 16, 32, 64, 128, 256)
 
@@ -102,8 +103,8 @@ class CallResult:
     n_called_segments: int
 
     @property
-    def called_mb(self) -> int:
-        """Number of bins called, which the caller can scale to megabases."""
+    def n_called_bins(self) -> int:
+        """How many bins the called segments cover, in total."""
         return int(np.count_nonzero(self.called_bins))
 
 
@@ -266,7 +267,28 @@ def localisation_overlap(called_bins: np.ndarray,
     return float(np.count_nonzero(called_bins & truth) / np.count_nonzero(truth))
 
 
+def localisation_precision(called_bins: np.ndarray,
+                           tumour_copy_number: np.ndarray) -> float:
+    """Fraction of what was called that is genuinely part of the lesion.
+
+    The companion to :func:`localisation_overlap`, which is recall. Recall
+    alone flatters a caller that fires whole arms: a whole arm call covers
+    every bin of a lesion inside it, so recall reaches one while most of what
+    was called is normal sequence. Reporting only recall is how a localisation
+    claim ends up meaning less than it appears to.
+    """
+    truth = tumour_copy_number != 2
+    called = np.count_nonzero(called_bins)
+    if called == 0:
+        return 0.0
+    return float(np.count_nonzero(called_bins & truth) / called)
+
+
 def is_localised(called_bins: np.ndarray, tumour_copy_number: np.ndarray,
                  min_overlap: float = 0.5) -> bool:
-    """Whether the calls recovered at least ``min_overlap`` of the lesion."""
+    """Whether the calls recovered at least ``min_overlap`` of the lesion.
+
+    This is a recall criterion. Pair it with :func:`localisation_precision`
+    before describing a caller as accurate about where a lesion is.
+    """
     return localisation_overlap(called_bins, tumour_copy_number) >= min_overlap

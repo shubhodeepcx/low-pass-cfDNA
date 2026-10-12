@@ -29,10 +29,17 @@ Typical use::
 from __future__ import annotations
 
 from .analysis import limit_of_detection, lod_matrix, lod_table
-from .detect import BinCountDetector, CallResult, is_localised
+from .detect import (
+    BinCountDetector,
+    CallResult,
+    is_localised,
+    localisation_precision,
+)
 from .genome import (
     COPY_NEUTRAL,
+    GENOME_HAPLOID_BP,
     LESIONS,
+    SEQUENCED_GENOME_BP,
     BinnedGenome,
     lesion_copy_number,
     lesion_size_mb,
@@ -42,6 +49,7 @@ from .junction import (
     JunctionModel,
     detection_power,
     expected_junction_reads,
+    gigabases,
     required_coverage,
 )
 from .simulate import LibraryModel, simulate_library, simulate_panel
@@ -52,11 +60,12 @@ __version__ = "1.0.0"
 __all__ = [
     "__version__",
     "BinnedGenome", "LESIONS", "COPY_NEUTRAL", "lesion_copy_number",
-    "lesion_size_mb",
+    "lesion_size_mb", "GENOME_HAPLOID_BP", "SEQUENCED_GENOME_BP",
     "LibraryModel", "simulate_library", "simulate_panel",
     "BinCountDetector", "CallResult", "is_localised",
+    "localisation_precision",
     "JunctionModel", "CapturePanel", "expected_junction_reads",
-    "detection_power", "required_coverage",
+    "detection_power", "required_coverage", "gigabases",
     "SweepConfig", "run_sweep",
     "limit_of_detection", "lod_table", "lod_matrix",
 ]

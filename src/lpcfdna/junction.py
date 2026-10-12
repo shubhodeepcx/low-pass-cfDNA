@@ -30,7 +30,7 @@ from dataclasses import dataclass
 import numpy as np
 from scipy.stats import poisson
 
-from .genome import GENOME_HAPLOID_BP
+from .genome import SEQUENCED_GENOME_BP
 
 __all__ = ["JunctionModel", "CapturePanel", "expected_junction_reads",
            "detection_power", "required_coverage", "gigabases",
@@ -97,12 +97,12 @@ class CapturePanel:
 
     @property
     def genome_fraction(self) -> float:
-        return self.target_bp / GENOME_HAPLOID_BP
+        return self.target_bp / SEQUENCED_GENOME_BP
 
     @property
     def enrichment(self) -> float:
         """How much more coverage a fixed budget buys inside the target."""
-        return GENOME_HAPLOID_BP / self.target_bp
+        return SEQUENCED_GENOME_BP / self.target_bp
 
 
 def expected_junction_reads(coverage: float, tumour_fraction: float,
@@ -156,7 +156,8 @@ def required_coverage(tumour_fraction: float, power: float = 0.90,
     return float(np.sqrt(lo * hi))
 
 
-def gigabases(coverage: float, target_bp: float = GENOME_HAPLOID_BP) -> float:
+def gigabases(coverage: float,
+              target_bp: float = SEQUENCED_GENOME_BP) -> float:
     """Sequenced gigabases implied by a coverage over a target of this size."""
     return coverage * target_bp / 1e9
 

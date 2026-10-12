@@ -85,7 +85,7 @@ pip install -e ".[dev]"
 
 pytest -q                # the test suite
 lpcfdna sweep --quick    # a few minutes, indicative numbers
-lpcfdna sweep            # the real thing, about five minutes
+lpcfdna sweep            # the real thing, about fifteen minutes
 lpcfdna figures          # charts from the CSVs
 lpcfdna junction         # the copy neutral evidence calculation
 lpcfdna summary          # headline numbers, printed
@@ -128,7 +128,7 @@ about 2,500 candidate segments: every chromosome arm plus sliding windows of 8
 to 256 bins.
 
 **The threshold is calibrated, not chosen.** It is the 95th percentile of the
-maximum segment statistic across 1,000 held out normal libraries, which
+maximum segment statistic across 2,000 held out normal libraries, which
 controls the genome wide false positive rate at 5 percent. This is the single
 most important methodological point in the repository. A per segment threshold
 applied across 2,500 segments calls something in nearly every normal library,
@@ -137,8 +137,10 @@ and a sensitivity figure reported at uncontrolled specificity means nothing.
 can be checked rather than believed.
 
 One incidental finding worth repeating: calibrating a genome wide threshold at
-the 5 percent level takes on the order of 1,000 normal libraries. With 300 the
-quantile estimate is noisy enough to deliver 8 percent instead of 5. For a
+the 5 percent level takes on the order of a thousand normal libraries. With 300
+the quantile estimate is noisy enough to deliver 8 percent instead of 5, and
+even at 1,000 the achieved rate still wandered between 3 and 7 percent across
+depths, which is why the figure here uses 2,000. For a
 small lab without a large normal cohort that is a real obstacle, and it is
 separate from the better known requirement that the panel match the assay
 chemistry.
@@ -155,7 +157,7 @@ src/lpcfdna/
   analysis.py   limits of detection and summary statistics
   figures.py    the three charts
   cli.py        command line interface
-tests/          80 tests, property based where it matters
+tests/          81 tests, property based where it matters
 results/        sweep.csv, calibration.csv, limit_of_detection.csv
 figures/        three PNG figures
 docs/           RESULTS.md, METHODS.md, LIMITATIONS.md

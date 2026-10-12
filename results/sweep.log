@@ -1,69 +1,107 @@
-540 conditions, 108000 calls planned
-depth   0.01x  threshold   4.87  achieved FPR 0.074
-  plus8            done  (    10s)
-  minus7           done  (    15s)
-  del(5q)          done  (    21s)
-  del(7q)          done  (    26s)
-  del(13q)         done  (    31s)
-  del(20q)         done  (    36s)
-  del(20q)_small   done  (    41s)
-  complex          done  (    46s)
-  t(9;22)          done  (    51s)
-  t(15;17)         done  (    56s)
-depth   0.05x  threshold   5.07  achieved FPR 0.054
-  plus8            done  (    66s)
-  minus7           done  (    70s)
-  del(5q)          done  (    75s)
-  del(7q)          done  (    80s)
-  del(13q)         done  (    85s)
-  del(20q)         done  (    90s)
-  del(20q)_small   done  (    94s)
-  complex          done  (    99s)
-  t(9;22)          done  (   104s)
-  t(15;17)         done  (   108s)
-depth    0.1x  threshold   5.73  achieved FPR 0.058
-  plus8            done  (   118s)
-  minus7           done  (   124s)
-  del(5q)          done  (   128s)
-  del(7q)          done  (   133s)
-  del(13q)         done  (   137s)
-  del(20q)         done  (   142s)
-  del(20q)_small   done  (   147s)
-  complex          done  (   151s)
-  t(9;22)          done  (   156s)
-  t(15;17)         done  (   160s)
-depth    0.5x  threshold   6.85  achieved FPR 0.036
-  plus8            done  (   170s)
-  minus7           done  (   174s)
-  del(5q)          done  (   179s)
-  del(7q)          done  (   184s)
-  del(13q)         done  (   188s)
-  del(20q)         done  (   192s)
-  del(20q)_small   done  (   197s)
-  complex          done  (   201s)
-  t(9;22)          done  (   206s)
-  t(15;17)         done  (   210s)
-depth    1.0x  threshold   6.88  achieved FPR 0.032
-  plus8            done  (   219s)
-  minus7           done  (   224s)
-  del(5q)          done  (   229s)
-  del(7q)          done  (   233s)
-  del(13q)         done  (   237s)
-  del(20q)         done  (   242s)
-  del(20q)_small   done  (   246s)
-  complex          done  (   250s)
-  t(9;22)          done  (   255s)
-  t(15;17)         done  (   259s)
-depth    5.0x  threshold   7.33  achieved FPR 0.048
-  plus8            done  (   268s)
-  minus7           done  (   273s)
-  del(5q)          done  (   277s)
-  del(7q)          done  (   282s)
-  del(13q)         done  (   287s)
-  del(20q)         done  (   291s)
-  del(20q)_small   done  (   296s)
-  complex          done  (   301s)
-  t(9;22)          done  (   305s)
-  t(15;17)         done  (   309s)
-540 conditions, 108000 calls, 309s
+648 conditions, 129600 calls planned
+depth   0.01x  threshold   5.00  achieved FPR 0.057
+  plus8            done  (    16s)
+  minus7           done  (    20s)
+  del(5q)          done  (    25s)
+  del(7q)          done  (    30s)
+  del(13q)         done  (    35s)
+  del(20q)         done  (    40s)
+  del(20q)_small   done  (    45s)
+  complex          done  (    50s)
+  t(9;22)          done  (    55s)
+  t(15;17)         done  (    60s)
+  t(8;21)          done  (    65s)
+  inv(16)          done  (    69s)
+depth   0.05x  threshold   5.07  achieved FPR 0.050
+  plus8            done  (    83s)
+  minus7           done  (    88s)
+  del(5q)          done  (    93s)
+  del(7q)          done  (    98s)
+  del(13q)         done  (   102s)
+  del(20q)         done  (   107s)
+  del(20q)_small   done  (   112s)
+  complex          done  (   116s)
+  t(9;22)          done  (   121s)
+  t(15;17)         done  (   125s)
+  t(8;21)          done  (   130s)
+  inv(16)          done  (   135s)
+depth    0.1x  threshold   5.82  achieved FPR 0.037
+  plus8            done  (   148s)
+  minus7           done  (   152s)
+  del(5q)          done  (   156s)
+  del(7q)          done  (   161s)
+  del(13q)         done  (   165s)
+  del(20q)         done  (   170s)
+  del(20q)_small   done  (   174s)
+  complex          done  (   180s)
+  t(9;22)          done  (   184s)
+  t(15;17)         done  (   189s)
+  t(8;21)          done  (   193s)
+  inv(16)          done  (   198s)
+depth    0.5x  threshold   6.67  achieved FPR 0.053
+  plus8            done  (   211s)
+  minus7           done  (   215s)
+  del(5q)          done  (   220s)
+  del(7q)          done  (   224s)
+  del(13q)         done  (   228s)
+  del(20q)         done  (   233s)
+  del(20q)_small   done  (   237s)
+  complex          done  (   242s)
+  t(9;22)          done  (   247s)
+  t(15;17)         done  (   251s)
+  t(8;21)          done  (   256s)
+  inv(16)          done  (   260s)
+depth    1.0x  threshold   6.67  achieved FPR 0.056
+  plus8            done  (   273s)
+  minus7           done  (   278s)
+  del(5q)          done  (   283s)
+  del(7q)          done  (   287s)
+  del(13q)         done  (   292s)
+  del(20q)         done  (   297s)
+  del(20q)_small   done  (   302s)
+  complex          done  (   307s)
+  t(9;22)          done  (   311s)
+  t(15;17)         done  (   315s)
+  t(8;21)          done  (   320s)
+  inv(16)          done  (   324s)
+depth    5.0x  threshold   7.21  achieved FPR 0.055
+  plus8            done  (   337s)
+  minus7           done  (   342s)
+  del(5q)          done  (   347s)
+  del(7q)          done  (   351s)
+  del(13q)         done  (   356s)
+  del(20q)         done  (   360s)
+  del(20q)_small   done  (   364s)
+  complex          done  (   369s)
+  t(9;22)          done  (   373s)
+  t(15;17)         done  (   377s)
+  t(8;21)          done  (   382s)
+  inv(16)          done  (   386s)
+648 conditions, 129600 calls, 386s
 wrote /home/claude/low-pass-cfdna/results/sweep.csv and two companions
+wrote /home/claude/low-pass-cfdna/figures/fig1_depth_plateau.png
+wrote /home/claude/low-pass-cfdna/figures/fig2_power_curves.png
+wrote /home/claude/low-pass-cfdna/figures/fig3_junction_cost.png
+COPY NEUTRAL DETECTION: WHAT THE EVIDENCE COSTS
+
+fragment length            167 bp
+anchor each side           20 bp
+usable spanning fragments  0.76
+reads required             3
+
+expected junction reads = coverage * tumour_fraction / 2 * 0.76
+
+ fraction |    at 0.1x |   coverage |   WGS Gbp |  capture Gbp
+--------------------------------------------------------------
+     0.01 |     0.0004 |      1400x |      4024 |         2.10
+     0.02 |     0.0008 |       700x |      2012 |         1.05
+     0.05 |     0.0019 |       280x |       805 |         0.42
+     0.10 |     0.0038 |       140x |       402 |         0.21
+     0.25 |     0.0095 |        56x |       161 |         0.08
+     0.50 |     0.0190 |        28x |        80 |         0.04
+
+panel target               1.5 Mb (0.052% of the genome)
+enrichment                 1917x
+
+wrote results/junction_report.txt
+ALLDONE

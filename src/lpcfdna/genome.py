@@ -26,6 +26,8 @@ __all__ = [
     "lesion_copy_number",
     "lesion_size_mb",
     "gc_efficiency",
+    "GENOME_HAPLOID_BP",
+    "SEQUENCED_GENOME_BP",
 ]
 
 #: GRCh38 primary assembly autosome lengths, in base pairs.
@@ -46,7 +48,14 @@ CENTROMERES: dict[int, int] = {
     21: 12000000, 22: 15000000,
 }
 
+#: Total autosomal length, which is the span the bin grid covers.
 GENOME_HAPLOID_BP: int = sum(CHROM_LENGTHS.values())
+
+#: What a whole genome run actually sequences: the autosomes plus the sex
+#: chromosomes and the unplaced contigs that come along with them. Sequencing
+#: cost is charged against this, not against the autosomes alone, so the
+#: junction calculation uses it wherever gigabases enter the arithmetic.
+SEQUENCED_GENOME_BP: int = 3_100_000_000
 
 
 def gc_efficiency(gc: np.ndarray, strength: float, peak: float = 0.42,

@@ -2,9 +2,9 @@
 
 Three findings, ordered by how much they should change what someone does.
 
-Everything below comes from `results/sweep.csv`: 540 conditions, 200 simulated
-libraries each, 108,000 detector calls, with the genome wide false positive
-rate held at 5 percent by calibration against 1,000 held out normal libraries
+Everything below comes from `results/sweep.csv`: 648 conditions, 200 simulated
+libraries each, 129,600 detector calls, with the genome wide false positive
+rate held at 5 percent by calibration against 2,000 held out normal libraries
 at every depth. Reproduce with `lpcfdna sweep && lpcfdna summary`.
 
 ## 0. The false positive rate really is controlled
@@ -14,23 +14,29 @@ down and shown.
 
 | Depth | Threshold | Target FPR | Achieved FPR |
 |---|---|---|---|
-| 0.01x | 4.87 | 5% | 7.4% |
-| 0.05x | 5.07 | 5% | 5.4% |
-| 0.1x | 5.73 | 5% | 5.8% |
-| 0.5x | 6.85 | 5% | 3.6% |
-| 1x | 6.88 | 5% | 3.2% |
-| 5x | 7.33 | 5% | 4.8% |
+| 0.01x | 5.00 | 5% | 5.7% |
+| 0.05x | 5.07 | 5% | 5.0% |
+| 0.1x | 5.82 | 5% | 3.7% |
+| 0.5x | 6.67 | 5% | 5.3% |
+| 1x | 6.67 | 5% | 5.6% |
+| 5x | 7.21 | 5% | 5.5% |
 
-Achieved rates are measured on 500 normal libraries that neither the panel nor
-the calibration set has seen. They average 5.0 percent and scatter from 3.2 to
-7.4 percent, which is quantile estimation noise rather than bias: the standard
-error on a 5 percent rate from 500 draws is about 1 percentage point, and the
-threshold itself is a 95th percentile estimated from 1,000 samples.
+Achieved rates are measured on 1,000 normal libraries that neither the panel
+nor the calibration set has seen. They average 5.1 percent and scatter from 3.7
+to 5.7 percent, which is quantile estimation noise rather than bias: the
+standard error on a 5 percent rate from 1,000 draws is about 0.7 percentage
+points, and the threshold itself is a 95th percentile estimated from 2,000
+samples.
 
-That scatter is itself worth reporting. **Calibrating a genome wide threshold
-to 5 percent is harder than it looks.** With 300 calibration libraries instead
-of 1,000, the achieved rate lands near 8 percent, a 60 percent inflation from
-calibration noise alone with every other part of the method correct. For a lab
+Getting there took work, and that is itself worth reporting. **Calibrating a
+genome wide threshold to 5 percent is harder than it looks.** With 300
+calibration libraries the achieved rate lands near 8 percent, a 60 percent
+inflation from calibration noise alone with every other part of the method
+correct. With 1,000 it still wandered between 3.2 and 7.4 percent across the
+six depths, which is enough scatter to make a cross depth sensitivity
+comparison slightly unfair, since each depth is then operating at a different
+specificity. Two thousand calibration libraries and a thousand fresh normals
+is what finally held the rate inside a point of target everywhere. For a lab
 without a large normal cohort this is a real obstacle, separate from the better
 known requirement that the panel match the assay chemistry.
 
@@ -42,24 +48,24 @@ Smallest tumour fraction detected with 90 percent probability:
 
 | Lesion | 0.01x | 0.05x | 0.1x | 0.5x | 1x | 5x |
 |---|---|---|---|---|---|---|
-| del(20q), 5.5 Mb | not reached | not reached | 39.5% | 37.8% | 37.2% | 37.0% |
-| del(20q), 16 Mb | not reached | 35.3% | 27.0% | 23.5% | 23.3% | 23.4% |
-| del(13q), 33.5 Mb | 38.3% | 23.0% | 21.1% | 14.3% | 13.9% | 13.9% |
-| del(7q), 54 Mb | 35.9% | 22.1% | 16.3% | 13.7% | 13.4% | 12.8% |
-| del(5q), 86 Mb | 24.9% | 14.0% | 13.6% | 9.7% | 9.6% | 9.4% |
-| trisomy 8, 145 Mb | 23.7% | 13.1% | 10.0% | 8.1% | 7.3% | 7.4% |
-| monosomy 7, 159 Mb | 23.2% | 13.2% | 10.5% | 9.2% | 9.0% | 8.1% |
-| complex, 434 Mb | 15.9% | 8.9% | 7.2% | 6.8% | 5.3% | 5.0% |
+| del(20q), 5.5 Mb | not reached | not reached | 39.9% | 37.7% | 36.7% | 37.1% |
+| del(20q), 16 Mb | not reached | 35.5% | 31.9% | 23.5% | 23.3% | 23.3% |
+| del(13q), 33.5 Mb | 39.1% | 23.3% | 22.4% | 14.2% | 13.8% | 13.9% |
+| del(7q), 54 Mb | 36.9% | 22.1% | 17.0% | 13.5% | 13.2% | 12.9% |
+| del(5q), 86 Mb | 24.8% | 14.3% | 13.5% | 9.6% | 9.5% | 9.3% |
+| trisomy 8, 145 Mb | 23.8% | 12.4% | 11.6% | 7.6% | 7.7% | 7.3% |
+| monosomy 7, 159 Mb | 23.7% | 13.4% | 11.4% | 8.7% | 8.5% | 8.4% |
+| complex, 434 Mb | 20.2% | 8.6% | 7.3% | 6.5% | 5.7% | 4.9% |
 
 "Not reached" means the lesion was never detected at 90 percent power at any
 tumour fraction up to 40 percent. It is a result, not a missing value.
 
-Going from 0.01x to 0.1x improves the detection limit by 45 to 58 percent,
-median 55. Going from 0.5x to 5x, **ten times the sequencing and ten times the
-cost**, improves it by 0.3 to 27 percent, median 4.9. Six of the eight lesions
-gain under 9 percent. The one large gain, 27 percent for the complex karyotype,
-is the easiest case, where the limit is already so low that the tumour fraction
-grid is coarse relative to the remaining headroom.
+Going from 0.01x to 0.1x improves the detection limit by 43 to 64 percent,
+median 52. Going from 0.5x to 5x, **ten times the sequencing and ten times the
+cost**, improves it by 0.6 to 24 percent, median 3.7. Seven of the eight
+lesions gain under 5 percent. The one large gain, 24 percent for the complex
+karyotype, is the easiest case, where the limit is already so low that the
+tumour fraction grid is coarse relative to the remaining headroom.
 
 This is the per library bias term doing its work. At 0.01x the detector is
 counting noise limited and depth helps enormously. By 0.5x the counting noise
@@ -78,27 +84,34 @@ does. See [LIMITATIONS.md](LIMITATIONS.md).
 
 ![power curves at 0.1x](../figures/fig2_power_curves.png)
 
-At a realistic 0.1x, the 434 Mb complex karyotype is detectable at 7.2 percent
-tumour fraction. The 5.5 Mb del(20q) needs 39.5 percent, a tumour fraction at
+At a realistic 0.1x, the 434 Mb complex karyotype is detectable at 7.3 percent
+tumour fraction. The 5.5 Mb del(20q) needs 39.9 percent, a tumour fraction at
 which the diagnosis was never in doubt.
 
 Fitting the detection limit against lesion size on log axes gives a slope of
--0.40 at 0.1x and -0.46 at 5x, close to the -0.5 the segment statistic implies:
+-0.41 at 0.1x and -0.46 at 5x, close to the -0.5 the segment statistic implies:
 **detection scales with the inverse square root of lesion size.** Halving the
 detectable tumour fraction takes a lesion four times larger. That is not a
 tuning problem, it is what averaging over bins does.
 
 Localisation is not the bottleneck. In conditions at 0.1x where detection
 reached 90 percent, the calls covered at least half the true lesion 94 percent
-of the time. When this detector fires, it fires in the right place. It simply
-does not fire often enough.
+of the time. When this detector fires, it fires in the right place.
+
+Precision is the softer number. In those same conditions, 74 percent of called
+bins fell inside the true lesion, so a quarter of the called extent is spill
+over past the boundary. That is what a fixed family of 8 to 256 bin windows
+does when a real breakpoint sits mid window, and it is also an artefact of
+unioning overlapping called segments, which can only inflate the reported
+extent. The right reading is that the detector finds the lesion and is loose
+about where it ends.
 
 ## 3. Balanced translocations are detected at exactly the false positive rate
 
-Across all 108 copy neutral conditions, four rearrangements by six depths by
+Across all 216 copy neutral conditions, four rearrangements by six depths by
 nine tumour fractions up to 40 percent, mean detection was **5.3 percent**
-against a 5 percent false positive rate. The highest single value was 11.5
-percent. The trend with tumour fraction is -0.007 per unit fraction, which is
+against a 5 percent false positive rate. The highest single value was 10.5
+percent. The trend with tumour fraction is +0.002 per unit fraction, which is
 zero to within noise.
 
 There is no trend because there is nothing to detect. The simulator confirms
@@ -145,7 +158,7 @@ A routine low pass cell free DNA run delivers something between 1 and 15 Gbp.
 Untargeted whole genome sequencing is off by two to three orders of magnitude.
 A capture panel over the recurrent breakpoint regions is comfortably inside
 budget, because those regions total about 1.5 Mb, 0.05 percent of the genome,
-for an enrichment of roughly 2,000 fold.
+for an enrichment of roughly 2,000 fold against the sequenced genome.
 
 **The copy neutral problem is a coverage allocation gap, not an algorithm
 gap.** No amount of fragmentomics, machine learning or clever normalisation

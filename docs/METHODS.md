@@ -71,7 +71,7 @@ mixture term against it.
 
 ## 3. Lesions
 
-Nine copy number lesions spanning 5 Mb to 434 Mb, plus four balanced
+Eight copy number lesions spanning 5 Mb to 434 Mb, plus four balanced
 rearrangements carrying no copy number change at all.
 
 | Name | Size | What it stands for |
@@ -129,9 +129,9 @@ Three sets of libraries are kept disjoint:
 
 - **Panel**, 100 libraries, used to learn per bin means and standard
   deviations.
-- **Calibration**, 1,000 libraries, used to build the null distribution of the
+- **Calibration**, 2,000 libraries, used to build the null distribution of the
   maximum statistic.
-- **False positive check**, 500 libraries, used to measure the achieved rate.
+- **False positive check**, 1,000 libraries, used to measure the achieved rate.
 
 Only the third gives an out of sample number, and it is the one reported in
 `results/calibration.csv`.
@@ -141,27 +141,33 @@ The class also carries a leave one out null built from the panel, used before
 scored against a panel it helped build, and `BinCountDetector.calibrated`
 reports which null is in force so the distinction is never silent.
 
-**On panel size.** A thousand calibration libraries is not excessive. At 300
+**On panel size.** Two thousand calibration libraries is not excessive. At 300
 the 95th percentile estimate is noisy enough that the achieved false positive
-rate lands near 8 percent instead of 5. That is a 60 percent inflation from
-calibration noise alone, with every other part of the method correct.
+rate lands near 8 percent instead of 5, a 60 percent inflation from calibration
+noise alone with every other part of the method correct. At 1,000 the mean is
+right but the rate still scatters by several points across depths, which makes
+a cross depth comparison of sensitivity slightly unfair. Two thousand holds
+every depth inside a point of target.
 
 ## 6. The sweep
 
-Six depths from 0.01x to 5x, nine tumour fractions from 1 to 40 percent, ten
-lesions, 200 replicate libraries per condition. 540 conditions and 108,000
-detector calls.
+Six depths from 0.01x to 5x, nine tumour fractions from 1 to 40 percent, twelve
+lesions, 200 replicate libraries per condition. 648 conditions and 129,600
+detector calls, of which 216 conditions are the copy neutral control.
 
 The panel, the calibration set and the threshold are rebuilt at every depth,
 because a panel built at one depth does not transfer to another. Random streams
 are spawned from one seed sequence per depth, so the whole sweep is
 reproducible and the depths are independent of each other.
 
-Two quantities are recorded per condition:
+Three quantities are recorded per condition:
 
 - **detected**, the fraction of replicates where any segment was called.
 - **localised**, the fraction where the calls covered at least half the true
   lesion.
+- **precision**, the mean fraction of called bins that fall inside the true
+  lesion. Recall without precision would let a detector that calls the whole
+  genome look perfectly localised.
 
 The gap between them answers a question readers ask: when the detector fires,
 is it firing in the right place? It is. At 0.1x, in conditions where detection
@@ -207,6 +213,12 @@ E = c * f / 2
 Genome length cancels. Fragment length cancels. The result depends only on
 coverage and tumour fraction, which is why it is worth stating as a formula
 rather than a simulation.
+
+Genome length does come back when coverage is converted into sequencing cost,
+and there it is the whole sequenced genome, 3.1 Gb, rather than the 2.87 Gb of
+autosomes the bin grid covers. A run pays for the sex chromosomes whether or
+not the analysis uses them, so `gigabases` and the capture enrichment are both
+charged against the larger number.
 
 Not every spanning molecule yields usable evidence. A split read needs enough
 unique sequence on each side of the breakpoint to map confidently, taken here

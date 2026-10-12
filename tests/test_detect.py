@@ -152,6 +152,6 @@ def test_call_result_reports_what_it_called(genome, fitted):
     result = fitted.call(simulate_library(genome, rng, depth=0.1,
                                           tumour_copy_number=cn,
                                           tumour_fraction=0.5))
-    assert result.called_mb == int(result.called_bins.sum())
+    assert result.n_called_bins == int(result.called_bins.sum())
     assert np.isfinite(result.max_statistic)
     assert result.max_statistic > result.threshold
